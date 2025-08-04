@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selecciona tu idioma</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .menu {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .flags {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .flag {
+            width: 60px;
+            height: 40px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border-radius: 8px;
+        }
+        .flag:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <h2>Seleccione su idioma</h2>
+        <div class="flags">
+            <img src="https://flagcdn.com/es.svg" alt="Español" class="flag" onclick="setLanguage('es')">
+            <img src="https://flagcdn.com/gb.svg" alt="English" class="flag" onclick="setLanguage('en')">
+           
+        </div>
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            window.location.href = `/${lang}/index.html`;
+        }
+    </script>
+</body>
+</html>

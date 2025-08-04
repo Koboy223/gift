@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Regalo Sorpresa 🎁</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* ELIMINAR COMPLETAMENTE EL HIGHLIGHT AZUL EN ANDROID */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            padding: 10px;
+            /* ELIMINAR HIGHLIGHT Y SELECCIÓN EN TODO EL BODY */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            /* HACER TODA LA PANTALLA CLICKEABLE */
+            position: relative;
+        }
+
+        /* OVERLAY INVISIBLE PARA TODA LA PANTALLA */
+        .fullscreen-touch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .gift-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            width: 100%;
+            max-width: 400px;
+            z-index: 2;
+            pointer-events: none; /* Permitir que el toque pase a través */
+        }
+
+        .gift-box {
+            width: clamp(120px, 40vw, 200px);
+            height: clamp(120px, 40vw, 200px);
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
+            /* CSS para Android */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* Permitir que el toque pase a través */
+        }
+
+        .gift-box:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-box.shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .gift-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 20px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+            transition: all 0.3s ease;
+            pointer-events: none; /* Importante para Android */
+            /* ELIMINAR HIGHLIGHT COMPLETAMENTE */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            touch-action: none !important;
+            outline: none !important;
+            border: none !important;
+        }
+
+        .gift-box:hover .gift-image {
+            filter: drop-shadow(0 25px 50px rgba(0,0,0,0.4)) brightness(1.1);
+        }
+
+        .gift-text {
+            margin-top: clamp(15px, 5vw, 30px);
+            color: white;
+            font-size: clamp(16px, 4vw, 24px);
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: pulse 2s ease-in-out infinite;
+            padding: 0 10px;
+            pointer-events: none; /* Permitir que el toque pase a través */
+        }
+
+        .progress-bar {
+            width: clamp(200px, 80vw, 250px);
+            height: clamp(6px, 2vw, 8px);
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: clamp(15px, 4vw, 20px) 0;
+            overflow: hidden;
+            position: relative;
+            pointer-events: none; /* Permitir que el toque pase a través */
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffd700, #4ecdc4);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes confetti-fall {
+            0% { 
+                transform: translateY(-10px) rotate(0deg); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .tap-counter {
+            position: absolute;
+            top: clamp(-35px, -8vw, -40px);
+            right: clamp(-35px, -8vw, -40px);
+            background: #ff4757;
+            color: white;
+            width: clamp(25px, 6vw, 30px);
+            height: clamp(25px, 6vw, 30px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: clamp(12px, 3vw, 14px);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .tap-counter.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Carrusel CUADRADO - Optimizado para todas las pantallas */
+        .carousel-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            z-index: 1000;
+            padding: 20px;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .carousel-container.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .carousel {
+            position: relative;
+            /* Hacer que el carrusel sea siempre cuadrado */
+            width: min(90vw, 90vh, 600px);
+            height: min(90vw, 90vh, 600px);
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            /* Forzar proporción cuadrada */
+            aspect-ratio: 1 / 1;
+        }
+
+        .carousel-images {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+            touch-action: pan-y;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .carousel-image {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .carousel-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .carousel-image.fill img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            bottom: clamp(15px, 3vw, 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: clamp(8px, 2vw, 10px);
+            z-index: 10;
+        }
+
+        .nav-dot {
+            width: clamp(10px, 3vw, 10px);
+            height: clamp(10px, 3vw, 10px);
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* ELIMINAR HIGHLIGHT AZUL COMPLETAMENTE */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            touch-action: manipulation !important;
+            outline: none !important;
+            /* Área de toque más grande pero invisible */
+            position: relative;
+        }
+
+        .nav-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            /* Área invisible pero clickeable más grande */
+        }
+
+        .nav-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.301);
+            border: none;
+            border-radius: 50%;
+            width: min(8vw, 8vh, 50px);
+            height: min(8vw, 8vh, 50px);
+            min-width: 35px;
+            min-height: 35px;
+            font-size: min(3vw, 3vh, 20px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white;
+            /* ELIMINAR HIGHLIGHT AZUL COMPLETAMENTE */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            touch-action: manipulation !important;
+            outline: none !important;
+        }
+
+        .carousel-arrow:hover {
+            background: rgba(255, 255, 255, 0.651);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            color: black;
+        }
+
+        .carousel-arrow.prev {
+            left: min(3vw, 3vh, 15px);
+        }
+
+        .carousel-arrow.next {
+            right: min(3vw, 3vh, 15px);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: min(3vw, 3vh, 15px);
+            right: min(3vw, 3vh, 15px);
+            background: #ff475663;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: min(7vw, 7vh, 40px);
+            height: min(7vw, 7vh, 40px);
+            min-width: 30px;
+            min-height: 30px;
+            font-size: min(3vw, 3vh, 18px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* ELIMINAR HIGHLIGHT AZUL COMPLETAMENTE */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            touch-action: manipulation !important;
+            outline: none !important;
+        }
+
+        .close-btn:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        /* Animaciones */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-1deg); }
+            75% { transform: translateX(5px) rotate(1deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Partículas de celebración */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* INDICADOR VISUAL PARA TOQUE */
+        .touch-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 5;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Media queries específicas para móviles */
+        @media (max-width: 480px) {
+            .carousel-arrow {
+                min-width: 45px;
+                min-height: 45px;
+                font-size: 18px;
+            }
+            
+            .nav-dot {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .nav-dot::before {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        /* Tablets */
+        @media (max-width: 768px) and (min-width: 481px) {
+            .carousel {
+                width: min(85vw, 85vh, 500px);
+                height: min(85vw, 85vh, 500px);
+                border-radius: 15px;
+            }
+            
+            .gift-text {
+                line-height: 1.3;
+            }
+        }
+
+        /* Móviles */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .carousel-container {
+                padding: 15px;
+            }
+            
+            .carousel {
+                width: min(90vw, 85vh, 400px);
+                height: min(90vw, 85vh, 400px);
+                border-radius: 15px;
+            }
+            
+            .gift-text {
+                line-height: 1.4;
+                margin-top: 20px;
+            }
+            
+            /* Botones más pequeños en móviles */
+            .carousel-arrow {
+                width: min(12vw, 45px);
+                height: min(12vw, 45px);
+                min-width: 35px;
+                min-height: 35px;
+                font-size: min(4vw, 18px);
+            }
+            
+            .carousel-arrow.prev {
+                left: min(4vw, 12px);
+            }
+            
+            .carousel-arrow.next {
+                right: min(4vw, 12px);
+            }
+            
+            .close-btn {
+                width: min(10vw, 40px);
+                height: min(10vw, 40px);
+                min-width: 30px;
+                min-height: 30px;
+                top: min(4vw, 12px);
+                right: min(4vw, 12px);
+                font-size: min(4vw, 16px);
+            }
+            
+            .nav-dot {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .nav-dot::before {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .carousel-nav {
+                bottom: min(5vw, 15px);
+                gap: min(2.5vw, 8px);
+            }
+            
+            /* Ajustar hover en móviles */
+            .gift-box:hover {
+                transform: scale(1.02);
+            }
+            
+            .carousel-arrow:hover {
+                transform: translateY(-50%) scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- OVERLAY INVISIBLE PARA TODA LA PANTALLA -->
+    <div class="fullscreen-touch" id="fullscreenTouch"></div>
+    
+    <!-- INDICADOR VISUAL -->
+    <div class="touch-indicator" id="touchIndicator">
+        📱 Toca cualquier parte de la pantalla
+        
+    </div>
+
+    
+    <div class="gift-container"> 
+        <div class="gift-box" id="giftBox">
+            <img src="/hWbOy2dg8b (1).gif"
+                  alt="Regalo"
+                  class="gift-image"
+                 id="giftImage"
+                 draggable="false">
+            <div class="tap-counter" id="tapCounter">1</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="gift-text" id="giftText">
+            Toca <span id="remainingTaps">15</span> veces para abrir el regalo.🎁
+        </div>
+    </div>
+    
+    <div class="carousel-container" id="carouselContainer">
+        <div class="carousel">
+            <button class="close-btn" id="closeBtn">✕</button>
+            <div class="carousel-images" id="carouselImages">
+                <div class="carousel-image" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                     <img src="/imagenes/img1.png" alt="imagen-carrusel">
+                </div>
+                <div class="carousel-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <img src="/imagenes/img2.png" alt="imagen-carrusel">
+                </div>
+                <div class="carousel-image" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    <img src="/imagenes/img3.png" alt="imagen-carrusel">
+                </div>
+                <div class="carousel-image" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+                    <img src="/imagenes/img4.png" alt="imagen-carrusel">
+                </div>
+            </div>
+                         
+            <button class="carousel-arrow prev" id="prevBtn">‹</button>
+            <button class="carousel-arrow next" id="nextBtn">›</button>
+                         
+            <div class="carousel-nav" id="carouselNav">
+                <div class="nav-dot active" data-slide="0"></div>
+                <div class="nav-dot" data-slide="1"></div>
+                <div class="nav-dot" data-slide="2"></div>
+                <div class="nav-dot" data-slide="3"></div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        let tapCount = 0;
+        let currentSlide = 0;
+        const totalSlides = 4;
+        const maxTaps = 15;
+
+        const giftBox = document.getElementById('giftBox');
+        const giftImage = document.getElementById('giftImage');
+        const tapCounter = document.getElementById('tapCounter');
+        const progressFill = document.getElementById('progressFill');
+        const remainingTaps = document.getElementById('remainingTaps');
+        const carouselContainer = document.getElementById('carouselContainer');
+        const carouselImages = document.getElementById('carouselImages');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const navDots = document.querySelectorAll('.nav-dot');
+        const celebration = document.getElementById('celebration');
+        const fullscreenTouch = document.getElementById('fullscreenTouch');
+        const touchIndicator = document.getElementById('touchIndicator');
+
+        // Función para crear confetti espectacular
+        function createSpectacularConfetti() {
+            if (typeof confetti === 'undefined') {
+                console.log('Canvas-confetti no disponible, usando confeti CSS fallback');
+                createCSSConfetti();
+                return;
+            }
+
+            const duration = 3000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            confetti({
+                ...defaults,
+                particleCount: 50,
+                origin: { x: 0.5, y: 0.5 },
+                colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff']
+            });
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff6b6b', '#ffd700', '#ff9ff3']
+                });
+
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#4ecdc4', '#45b7d1', '#54a0ff']
+                });
+
+                confetti({
+                    ...defaults,
+                    particleCount: particleCount / 2,
+                    origin: { x: Math.random(), y: 0 },
+                    colors: ['#96ceb4', '#feca57', '#ff9ff3']
+                });
+            }, 250);
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.4 },
+                    shapes: ['star'],
+                    colors: ['#ffd700', '#ffed4e', '#feca57'],
+                    gravity: 0.8,
+                    drift: 1,
+                    scalar: 1.2
+                });
+            }, 1000);
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    spread: 50,
+                    origin: { x: 0.2, y: 0.2 },
+                    shapes: ['circle'],
+                    colors: ['#ff6b6b', '#ff9ff3', '#ff4757'],
+                    gravity: 0.5,
+                    scalar: 0.8
+                });
+
+                confetti({
+                    particleCount: 50,
+                    spread: 50,
+                    origin: { x: 0.8, y: 0.2 },
+                    shapes: ['circle'],
+                    colors: ['#ff6b6b', '#ff9ff3', '#ff4757'],
+                    gravity: 0.5,
+                    scalar: 0.8
+                });
+            }, 1500);
+        }
+
+        function createCSSConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.style.position = 'fixed';
+                confettiPiece.style.width = Math.random() * 10 + 5 + 'px';
+                confettiPiece.style.height = Math.random() * 10 + 5 + 'px';
+                confettiPiece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.left = Math.random() * 100 + '%';
+                confettiPiece.style.top = '-10px';
+                confettiPiece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confettiPiece.style.pointerEvents = 'none';
+                confettiPiece.style.zIndex = '2000';
+                confettiPiece.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+                
+                document.body.appendChild(confettiPiece);
+
+                setTimeout(() => {
+                    if (confettiPiece && confettiPiece.parentNode) {
+                        confettiPiece.parentNode.removeChild(confettiPiece);
+                    }
+                }, 5000);
+            }
+        }
+
+        // Función para manejar el tap/click del regalo - AHORA FUNCIONA EN TODA LA PANTALLA
+        function handleGiftTap(event) {
+            // Solo procesar si el carrusel no está abierto
+            if (carouselContainer.classList.contains('show')) {
+                return;
+            }
+            
+            event.preventDefault();
+            event.stopPropagation();
+            
+            tapCount++;
+            
+            const remaining = Math.max(0, maxTaps - tapCount);
+            remainingTaps.textContent = remaining;
+            
+            tapCounter.textContent = tapCount;
+            tapCounter.classList.add('show');
+            
+            const progressPercent = (tapCount / maxTaps) * 100;
+            progressFill.style.width = Math.min(progressPercent, 100) + '%';
+            
+            giftBox.classList.add('shake');
+            setTimeout(() => {
+                giftBox.classList.remove('shake');
+            }, 500);
+
+            // Ocultar el indicador después del primer tap
+            if (tapCount === 1) {
+                touchIndicator.style.display = 'none';
+            }
+
+            if (remaining === 0) {
+                document.getElementById('giftText').innerHTML = '🎉 The gift is opening! 🎉';
+                setTimeout(() => {
+                    createSpectacularConfetti();
+                    currentSlide = 0;
+                    updateCarousel();
+                    carouselContainer.classList.add('show');
+                }, 500);
+            } else if (remaining <= 3) {
+                document.getElementById('giftText').innerHTML = `Almost there! Just ${remaining} more taps 💥`;
+            } else if (remaining <= 7) {
+                document.getElementById('giftText').innerHTML = `The box is cracking! ${remaining} more taps 💫`;
+            } else {
+                document.getElementById('giftText').innerHTML = `Tap <span id="remainingTaps">${remaining}</span> more times to open the gift 🎁`;
+            }
+
+            setTimeout(() => {
+                if (tapCount < maxTaps) {
+                    tapCounter.classList.remove('show');
+                }
+            }, 1500);
+        }
+
+        // Variables para controlar la interacción táctil
+        let isTouch = false;
+        let touchStartTime = 0;
+
+        // Detectar si es un dispositivo táctil
+        function isTouchDevice() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        }
+
+        // Event listeners para TODA LA PANTALLA - SOLUCION PRINCIPAL PARA ANDROID
+        if (isTouchDevice()) {
+            // Para dispositivos táctiles (Android/iOS) - TODA LA PANTALLA
+            fullscreenTouch.addEventListener('touchstart', function(e) {
+                if (!carouselContainer.classList.contains('show')) {
+                    isTouch = true;
+                    touchStartTime = Date.now();
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            fullscreenTouch.addEventListener('touchend', function(e) {
+                if (!carouselContainer.classList.contains('show') && isTouch && (Date.now() - touchStartTime) < 500) {
+                    handleGiftTap(e);
+                }
+                isTouch = false;
+            }, { passive: false });
+            
+            // Prevenir el evento click en dispositivos táctiles
+            fullscreenTouch.addEventListener('click', function(e) {
+                if (!carouselContainer.classList.contains('show')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        } else {
+            // Para dispositivos no táctiles (desktop) - TODA LA PANTALLA
+            fullscreenTouch.addEventListener('click', handleGiftTap);
+        }
+
+        // Funciones del carrusel
+        function updateCarousel() {
+            const translateX = -currentSlide * 100;
+            carouselImages.style.transform = `translateX(${translateX}%)`;
+            
+            navDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        currentSlide = 0;
+        updateCarousel();
+
+        // Función para añadir soporte táctil a los botones
+        function addTouchSupport(element, callback) {
+            if (isTouchDevice()) {
+                element.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                element.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    callback();
+                }, { passive: false });
+            } else {
+                element.addEventListener('click', callback);
+            }
+        }
+
+        addTouchSupport(nextBtn, nextSlide);
+        addTouchSupport(prevBtn, prevSlide);
+
+        // Event listeners para los dots con soporte táctil
+        const navDotsContainer = document.getElementById('carouselNav');
+        if (isTouchDevice()) {
+            navDotsContainer.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (e.target.classList.contains('nav-dot')) {
+                    const slideIndex = parseInt(e.target.getAttribute('data-slide'));
+                    if (!isNaN(slideIndex) && slideIndex >= 0 && slideIndex < totalSlides) {
+                        currentSlide = slideIndex;
+                        updateCarousel();
+                    }
+                }
+            }, { passive: false });
+        } else {
+            navDotsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('nav-dot')) {
+                    const slideIndex = parseInt(e.target.getAttribute('data-slide'));
+                    if (!isNaN(slideIndex) && slideIndex >= 0 && slideIndex < totalSlides) {
+                        currentSlide = slideIndex;
+                        updateCarousel();
+                    }
+                }
+            });
+        }
+
+        // Cerrar carrusel con soporte táctil
+        addTouchSupport(closeBtn, () => {
+            carouselContainer.classList.remove('show');
+            setTimeout(() => {
+                tapCount = 0;
+                tapCounter.classList.remove('show');
+                progressFill.style.width = '0%';
+                remainingTaps.textContent = maxTaps;
+                document.getElementById('giftText').innerHTML = `Tap <span id="remainingTaps">${maxTaps}</span> times to open the gift 🎁`;
+                currentSlide = 0;
+                updateCarousel();
+                // Mostrar el indicador de nuevo
+                touchIndicator.style.display = 'block';
+            }, 500);
+        });
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (carouselContainer.classList.contains('show')) {
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'Escape') {
+                    carouselContainer.classList.remove('show');
+                    setTimeout(() => {
+                        tapCount = 0;
+                        tapCounter.classList.remove('show');
+                        progressFill.style.width = '0%';
+                        remainingTaps.textContent = maxTaps;
+                        document.getElementById('giftText').innerHTML = `Tap <span id="remainingTaps">${maxTaps}</span> times to open the gift 🎁`;
+                        currentSlide = 0;
+                        updateCarousel();
+                        // Mostrar el indicador de nuevo
+                        touchIndicator.style.display = 'block';
+                    }, 500);
+                }
+            }
+        });
+
+        // Soporte para gestos touch en móviles - MEJORADO
+        let startX = 0;
+        let endX = 0;
+        let startY = 0;
+        let endY = 0;
+
+        carouselContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+
+        carouselContainer.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Solo procesar swipe horizontal si el movimiento horizontal es mayor que el vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }, { passive: true });
+
+        // Ocultar el indicador automáticamente después de 5 segundos
+        setTimeout(() => {
+            if (tapCount === 0) {
+                touchIndicator.style.opacity = '0.5';
+            }
+        }, 5000);
+
+        // Ocultar completamente después de 10 segundos si no se ha tocado
+        setTimeout(() => {
+            if (tapCount === 0) {
+                touchIndicator.style.display = 'none';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
