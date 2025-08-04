@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Language Selection Portal</title>
+    <title>Selecciona tu idioma</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
         * {
             margin: 0;
@@ -13,330 +14,177 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --shadow-primary: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-            --shadow-hover: 0 35px 70px -12px rgba(0, 0, 0, 0.5);
-        }
-
         body {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #000000 0%, #290052 100%);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Epic animated background */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .language-selector {
+            background: rgba(16, 27, 46, 0.411);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+            max-width: 420px;
             width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-            animation: gradientShift 15s ease-in-out infinite;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg);
-                opacity: 0.8;
-            }
-            50% { 
-                transform: scale(1.1) rotate(2deg);
-                opacity: 1;
-            }
-        }
-
-        /* Floating orbs */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(10px);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .orb:nth-child(1) {
-            width: 200px;
-            height: 200px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .orb:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            top: 70%;
-            right: 10%;
-            animation-delay: -3s;
-        }
-
-        .orb:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            top: 40%;
-            left: 80%;
-            animation-delay: -6s;
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(0px) scale(1);
-            }
-            50% { 
-                transform: translateY(-30px) scale(1.05);
-            }
-        }
-
-        /* Main container */
-        .language-portal {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            padding: 4rem 3rem;
-            border-radius: 32px;
             text-align: center;
-            box-shadow: var(--shadow-primary);
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            overflow: hidden;
-            animation: portalEntry 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes portalEntry {
-            0% {
-                opacity: 0;
-                transform: translateY(60px) scale(0.9);
-                filter: blur(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
-        .language-portal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        .portal-header {
-            margin-bottom: 3rem;
-        }
-
-        .portal-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #ffffff, #f0f9ff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-            100% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.6); }
-        }
-
-        .portal-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        .language-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+        .header {
             margin-bottom: 2rem;
         }
 
-        .language-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2rem 1.5rem;
+        .title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #608adad2;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #aaaaaa91;
+            font-weight: 400;
+        }
+
+        .languages {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .lang-option {
+            flex: 1;
+            background: #ffffff79;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-            overflow: hidden;
-            transform-style: preserve-3d;
+            transition: all 0.2s ease;
+            position: relative;
+            min-width: 140px;
         }
 
-        .language-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            border-radius: 24px;
+        .lang-option:hover {
+            border-color: #2e0c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
         }
 
-        .language-card:hover::before {
-            opacity: 1;
+        .lang-option:active {
+            transform: translateY(0);
         }
 
-        .language-card:hover {
-            transform: translateY(-12px) rotateX(5deg);
-            box-shadow: var(--shadow-hover);
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.08);
+        .lang-option.selected {
+            border-color: #22c55e;
+            background: #f0fdf4;
         }
 
-        .language-card:active {
-            transform: translateY(-6px) scale(0.98);
-        }
-
-        .language-flag {
-            width: 80px;
-            height: 56px;
-            border-radius: 12px;
-            margin: 0 auto 1.5rem;
+        .flag {
+            width: 64px;
+            height: 43px;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
             display: block;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             object-fit: cover;
         }
 
-        .language-card:hover .language-flag {
-            transform: scale(1.1) rotateY(5deg);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        .lang-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
         }
 
-        .language-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
+        .lang-native {
+            font-size: 0.875rem;
+            color: #6b7280;
         }
 
-        .language-native {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            opacity: 0.8;
-        }
-
-        /* Selection states */
-        .language-card.selected {
-            background: rgba(34, 197, 94, 0.15);
-            border-color: rgba(34, 197, 94, 0.4);
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .language-card.selected::after {
-            content: '✓';
+        .selected-check {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 32px;
-            height: 32px;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
             background: #22c55e;
             border-radius: 50%;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             color: white;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 1.1rem;
-            animation: checkPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        @keyframes checkPop {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.3) rotate(180deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) rotate(360deg);
-                opacity: 1;
-            }
+        .lang-option.selected .selected-check {
+            display: flex;
         }
 
-        /* Loading state */
-        .portal-loading {
-            position: absolute;
+        .continue-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: rgba(255, 255, 255, 0.363);
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+
+        .continue-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
+            display: none;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-            border-radius: 32px;
+            flex-direction: column;
+            z-index: 1000;
         }
 
-        .portal-loading.active {
-            opacity: 1;
-            visibility: visible;
+        .loading.active {
+            display: flex;
         }
 
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-top: 3px solid #ffffff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 1rem;
-        }
-
-        .loading-text {
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 500;
-            animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes spin {
@@ -344,282 +192,184 @@
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* Keyboard shortcuts */
-        .shortcuts {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .shortcut-hint {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            opacity: 0.7;
-            margin-bottom: 0.5rem;
-        }
-
-        .shortcut-keys {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .shortcut-key {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+        .loading-text {
+            color: white;
+            font-size: 1rem;
             font-weight: 500;
         }
 
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .language-portal {
-                padding: 3rem 2rem;
+        .keyboard-hint {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .key {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 0.125rem 0.375rem;
+            font-family: monospace;
+            margin: 0 0.125rem;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .language-selector {
+                padding: 2rem 1.5rem;
                 margin: 1rem;
             }
-            
-            .portal-title {
-                font-size: 2rem;
+
+            .title {
+                font-size: 1.5rem;
             }
-            
-            .language-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+
+            .languages {
+                flex-direction: column;
+                gap: 1rem;
             }
-            
-            .language-card {
-                padding: 1.5rem;
+
+            .lang-option {
+                min-width: auto;
+                padding: 1.25rem 1rem;
             }
-            
-            .language-flag {
-                width: 70px;
-                height: 49px;
+
+            .flag {
+                width: 56px;
+                height: 37px;
             }
         }
 
-        @media (max-width: 480px) {
-            .language-portal {
-                padding: 2rem 1.5rem;
-            }
-            
-            .portal-title {
-                font-size: 1.8rem;
-            }
-            
-            .portal-subtitle {
-                font-size: 1rem;
-            }
-        }
-
-        /* Particle system */
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: particleFloat 4s linear infinite;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) scale(1);
-                opacity: 0;
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Floating orbs -->
-    <div class="orb"></div>
-    <div class="orb"></div>
-    <div class="orb"></div>
-
-    <div class="language-portal" id="portal">
-        <div class="portal-header">
-            <h1 class="portal-title">Choose Your Language</h1>
-            <p class="portal-subtitle">Select your preferred language to continue</p>
+    <div class="language-selector">
+        <div class="header">
+            <h1 class="title">Selecciona tu idioma</h1>
+            <p class="subtitle">Choose your language</p>
         </div>
 
-        <div class="language-grid">
-            <div class="language-card" data-lang="es" onclick="selectLanguage('es')">
-                <img src="https://flagcdn.com/es.svg" alt="Spanish Flag" class="language-flag" loading="lazy">
-                <div class="language-name">Español</div>
-                <div class="language-native">Spanish</div>
+        <div class="languages">
+            <div class="lang-option" data-lang="es" onclick="selectLanguage('es')">
+                <div class="selected-check">✓</div>
+                <img src="https://flagcdn.com/es.svg" alt="Español" class="flag" loading="lazy">
+                <div class="lang-name">Español</div>
+                <div class="lang-native">Spanish</div>
             </div>
 
-            <div class="language-card" data-lang="en" onclick="selectLanguage('en')">
-                <img src="https://flagcdn.com/gb.svg" alt="English Flag" class="language-flag" loading="lazy">
-                <div class="language-name">English</div>
-                <div class="language-native">English</div>
+            <div class="lang-option" data-lang="en" onclick="selectLanguage('en')">
+                <div class="selected-check">✓</div>
+                <img src="https://flagcdn.com/gb.svg" alt="English" class="flag" loading="lazy">
+                <div class="lang-name">English</div>
+                <div class="lang-native">English</div>
             </div>
         </div>
 
-        <div class="shortcuts">
-            <div class="shortcut-hint">Keyboard shortcuts</div>
-            <div class="shortcut-keys">
-                <span class="shortcut-key">1 or E</span>
-                <span class="shortcut-key">2 or N</span>
-            </div>
-        </div>
+        <button class="continue-btn" id="continueBtn" onclick="proceedToSite()">
+            Continuar / Continue
+        </button>
 
-        <div class="portal-loading" id="loading">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Initializing language portal...</div>
+        <div class="keyboard-hint">
+            Atajos de teclado: <span class="key">1</span> Español, <span class="key">2</span> English
         </div>
     </div>
 
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Cargando...</div>
+    </div>
+
     <script>
-        // Particle system
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.animationDelay = Math.random() * 4 + 's';
-            particle.style.width = particle.style.height = (Math.random() * 4 + 2) + 'px';
-            document.body.appendChild(particle);
+        let selectedLang = null;
 
-            setTimeout(() => {
-                particle.remove();
-            }, 4000);
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 300);
-
-        // Language selection
         function selectLanguage(lang) {
-            const selectedCard = document.querySelector(`[data-lang="${lang}"]`);
-            const loading = document.getElementById('loading');
-            const portal = document.getElementById('portal');
-
-            // Mark as selected
-            selectedCard.classList.add('selected');
-            
-            // Disable other cards
-            document.querySelectorAll('.language-card').forEach(card => {
-                if (card !== selectedCard) {
-                    card.style.opacity = '0.5';
-                    card.style.pointerEvents = 'none';
-                }
+            // Remove previous selection
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.classList.remove('selected');
             });
 
-            // Show loading after animation
+            // Add selection to clicked option
+            const selectedOption = document.querySelector(`[data-lang="${lang}"]`);
+            selectedOption.classList.add('selected');
+            
+            selectedLang = lang;
+
+            // Show continue button
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.classList.add('visible');
+        }
+
+        function proceedToSite() {
+            if (!selectedLang) return;
+
+            // Show loading
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+
+            // Update loading text based on selected language
+            const loadingText = document.querySelector('.loading-text');
+            loadingText.textContent = selectedLang === 'es' ? 'Cargando...' : 'Loading...';
+
+            // Simulate loading and redirect
             setTimeout(() => {
-                loading.classList.add('active');
-                
-                // Simulate loading time
-                setTimeout(() => {
-                    // Navigation would happen here
-                    window.location.href = `/${lang}/index.html`;
-                }, 2000);
-            }, 800);
+                window.location.href = `/${selectedLang}/index.html`;
+            }, 1500);
         }
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            
-            if (key === '1' || key === 'e') {
+            if (e.key === '1') {
                 selectLanguage('es');
-            } else if (key === '2' || key === 'n') {
+            } else if (e.key === '2') {
                 selectLanguage('en');
+            } else if (e.key === 'Enter' && selectedLang) {
+                proceedToSite();
             }
         });
 
-        // Enhanced hover effects with sound simulation
-        document.querySelectorAll('.language-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-12px) rotateX(5deg)';
-                
-                // Add ripple effect
-                const ripple = document.createElement('div');
-                ripple.style.position = 'absolute';
-                ripple.style.top = '50%';
-                ripple.style.left = '50%';
-                ripple.style.width = '0';
-                ripple.style.height = '0';
-                ripple.style.background = 'rgba(255, 255, 255, 0.3)';
-                ripple.style.borderRadius = '50%';
-                ripple.style.transform = 'translate(-50%, -50%)';
-                ripple.style.animation = 'rippleExpand 0.6s ease-out';
-                ripple.style.pointerEvents = 'none';
-                
-                card.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
+        // Touch improvements for mobile
+        document.querySelectorAll('.lang-option').forEach(option => {
+            // Add touch feedback
+            option.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+
+            option.addEventListener('touchend', function() {
+                this.style.transform = '';
             });
         });
 
-        // Add ripple expansion animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes rippleExpand {
-                0% {
-                    width: 0;
-                    height: 0;
-                    opacity: 1;
-                }
-                100% {
-                    width: 200px;
-                    height: 200px;
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
         // Error handling for flag images
-        document.querySelectorAll('.language-flag').forEach(img => {
+        document.querySelectorAll('.flag').forEach(img => {
             img.onerror = function() {
-                this.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                this.style.background = '#e5e7eb';
                 this.style.display = 'flex';
                 this.style.alignItems = 'center';
                 this.style.justifyContent = 'center';
                 this.innerHTML = '🌐';
-                this.style.fontSize = '28px';
-                this.style.color = 'white';
+                this.style.fontSize = '24px';
             };
         });
 
-        // Add entrance animation delay for cards
-        document.querySelectorAll('.language-card').forEach((card, index) => {
-            card.style.animationDelay = `${0.3 + index * 0.1}s`;
-            card.style.animation = 'cardSlideIn 0.8s cubic-bezier(0.23, 1, 0.320, 1) forwards';
-        });
-
-        // Card slide in animation
-        const cardStyle = document.createElement('style');
-        cardStyle.textContent = `
-            @keyframes cardSlideIn {
-                0% {
-                    opacity: 0;
-                    transform: translateY(40px) scale(0.9);
-                }
-                100% {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
+        // Prevent zoom on double tap (iOS)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
             }
-        `;
-        document.head.appendChild(cardStyle);
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
