@@ -2,69 +2,305 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acceso Restringido</title>
   <style>
-    body {
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-      color: white;
-    }
-    .login-box {
-      background: rgba(30, 41, 59, 0.9);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      width: 90%;
-      max-width: 60%;
-      max-height: 50%;
-      text-align: center;
-    }
-    .login-box h1 {
-      margin-bottom: 1rem;
-      background: linear-gradient(90deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 1rem 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: #334155;
-      color: white;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #10b981, #06b6d4);
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      transform: scale(1.02);
-    }
-    .error-msg {
-      margin-top: 0.5rem;
-      color: #f87171;
-      display: none;
-    }
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #240047 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="90" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Contenedor de imagen circular */
+        .image-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem auto;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Para cuando uses una imagen real */
+        .user-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .login-container h1 {
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-container {
+            margin-top: 2rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .error-msg {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            color: #fca5a5;
+            display: none;
+            backdrop-filter: blur(10px);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #000000, #29003a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .login-container h1 {
+                font-size: 2rem;
+            }
+
+            .image-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        .clok{
+            max-width: 70%;
+        }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h1>🔒 Acceso</h1>
-    <input type="password" id="password" placeholder="Ingresa la contraseña" />
-    <button id="btn">Entrar</button>
+  <div class="login-container">
+    <div class="lock-icon"><img class="clok" src="icons8-candado-48.png" alt=""></div>
+    
+    <div class="image-container">
+      <div class="image-placeholder">
+        <!-- Replace the content below with your image -->
+        <img src="giphy (1).gif" alt="">
+      </div>
+    </div>
+
+    <h1>Acceso Seguro</h1>
+    
+    <div class="form-group">
+      <div class="input-container">
+        <input type="password" id="password" placeholder="Ingresa tu contraseña" />
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <button id="btn">Iniciar Sesión</button>
+    </div>
+
     <div class="error-msg" id="error">Contraseña incorrecta</div>
   </div>
 
@@ -78,9 +314,18 @@
 
     const correctHash = 'a0b967fc60136d2ef96fa2a4feaf41ea3e0f266e510b4a5e188b6f781ae12a30';
 
+    // Handle Enter key
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('btn').click();
+      }
+    });
+
     document.getElementById('btn').addEventListener('click', async () => {
       const pass = document.getElementById('password').value.trim();
       const errorDiv = document.getElementById('error');
+      const btn = document.getElementById('btn');
+      
       errorDiv.style.display = 'none';
 
       if (!pass) {
@@ -89,14 +334,28 @@
         return;
       }
 
-      const passHash = await sha256(pass);
+      // Add loading state
+      btn.textContent = 'Verificando...';
+      btn.disabled = true;
 
-      if (passHash === correctHash) {
-        // Redirige elegantemente
-        window.location.href = '/lenguage.html';
-      } else {
+      try {
+        const passHash = await sha256(pass);
+
+        if (passHash === correctHash) {
+          btn.textContent = '✓ Acceso Concedido';
+          btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          
+          setTimeout(() => {
+            window.location.href = '/lenguage.html';
+          }, 1000);
+        } else {
+          throw new Error('Contraseña incorrecta');
+        }
+      } catch (error) {
         errorDiv.textContent = 'Contraseña incorrecta';
         errorDiv.style.display = 'block';
+        btn.textContent = 'Iniciar Sesión';
+        btn.disabled = false;
       }
     });
   </script>
