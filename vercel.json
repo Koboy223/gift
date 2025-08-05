@@ -1,16 +1,18 @@
 {
-    "redirects": [
-      {
-        "source": "/es(/.*)?",
-        "destination": "/index.html",
-        "permanent": false
-      },
-      {
-        "source": "/en(/.*)?",
-        "destination": "/index.html",
-        "permanent": false
-      }
-    ],
-    "cleanUrls": true
-  }
+  "redirects": [
+    {
+      "source": "/es",
+      "destination": "/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html",
+      "permanent": false
+    }
+  ],
+  "cleanUrls": true
+}
+
+
   
