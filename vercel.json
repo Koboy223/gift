@@ -1,8 +1,15 @@
-
 {
   "redirects": [
-   
+    {
+      "source": "/es",
+      "destination": "/index.html",
+      "permanent":  true
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html",
+      "permanent": true
+    }
   ],
- 
-
-
+  "cleanUrls": true
+}
