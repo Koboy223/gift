@@ -1,8 +1,8 @@
-export function middleware(req) {
-  const auth = req.headers.get('authorization');
+export function middleware(request) {
+  const auth = request.headers.get('authorization');
 
   const username = 'admin';
-  const password = 'sai';
+  const password = 'say';
 
   if (!auth) {
     return new Response('Autenticación requerida', {
@@ -15,7 +15,7 @@ export function middleware(req) {
   const [user, pass] = atob(b64auth).split(':');
 
   if (user === username && pass === password) {
-    return; // Usuario autorizado, continuar
+    return new Response(null, { status: 200 });
   }
 
   return new Response('Credenciales inválidas', {
