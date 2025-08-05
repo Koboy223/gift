@@ -1,5 +1,8 @@
 {
-  
+  "middleware": [
+    {
+      "path": "/(.*)"
+    }
+  ],
   "cleanUrls": true
 }
-
