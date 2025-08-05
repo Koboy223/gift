@@ -176,7 +176,7 @@ body {
     justify-content: center;
     font-size: clamp(14px, 4vw, 20px);
     color: #8B4513;
-    font-family: 'Caveat', cursive;
+    font-family: cursive;
     font-weight: 600;
     text-align: center;
     line-height: 1.2;
@@ -214,7 +214,7 @@ body {
     line-height: 1.5;
     color: #2c2c2c;
     text-align: center;
-    font-family: 'Caveat', cursive;
+    font-family: cursive;
     font-weight: 600;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     max-width: 90%;
@@ -233,7 +233,7 @@ body {
 
 .cover, .back-cover {
     background: #FFFEF7;
-    font-family: 'Caveat', cursive;
+    font-family: cursive;
     text-align: center;
     padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 30px);
     color: #2c2c2c;
@@ -294,7 +294,7 @@ body {
 
 .instruction {
     color: #FFFEF7;
-    font-family: 'Caveat', cursive;
+    font-family: cursive;
     font-weight: 600;
     font-size: clamp(14px, 3.5vw, 18px);
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
@@ -379,4 +379,3 @@ body {
     }
 
 }
-
