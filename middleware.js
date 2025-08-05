@@ -15,7 +15,8 @@ export function middleware(request) {
   const [user, pass] = atob(b64auth).split(':');
 
   if (user === username && pass === password) {
-    return new Response(null, { status: 200 });
+    // Permitir continuar a la ruta solicitada
+    return;
   }
 
   return new Response('Credenciales inválidas', {
