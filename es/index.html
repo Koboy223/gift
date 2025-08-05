@@ -2,621 +2,180 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Mi Historia con Flork</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
-        
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #2c1810 0%, #8B4513 30%, #D2691E 70%, #8B4513 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
-            font-family: 'Crimson Text', serif;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        .book-section {
-            height: 100vh;
-            width: 100%;
-            padding: 40px 0;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .book-title {
-            font-size: 36px;
-            font-family: 'Caveat', cursive;
-            font-weight: 700;
-            color: #FFFEF7;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
-        }
-
-        .book-section > .container {
-            height: 500px;
-            width: 600px;
-            position: relative;
-            border-radius: 2%;
-            margin-bottom: 40px;
-            perspective: 1200px;
-            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
-        }
-
-        .container > .right {
-            position: absolute;
-            height: 100%;
-            width: 50%;
-            transition: 0.7s ease-in-out;
-            transform-style: preserve-3d;
-        }
-
-        .book-section > .container > .right {
-            right: 0;
-            transform-origin: left;
-            border-radius: 10px 0 0 10px;
-        }
-
-        .right > figure.front, .right > figure.back {
-            margin: 0;
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background-size: cover;
-            background-repeat: no-repeat;
-            backface-visibility: hidden;
-            background-color: #FFFEF7;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            text-align: center;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .right > figure.front {
-            background-position: right;
-            border-radius: 0 15px 15px 0;
-            box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.3);
-            border: 2px solid #E8E6E0;
-        }
-
-        .right > figure.back {
-            background-position: left;
-            border-radius: 15px 0 0 15px;
-            box-shadow: -3px 3px 20px rgba(0, 0, 0, 0.3);
-            transform: rotateY(180deg);
-            border: 2px solid #E8E6E0;
-        }
-
-        .flip {
-            transform: rotateY(-180deg);
-            visibility: hidden;
-        }
-
-        .flip .front {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .flip .back {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .flip::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            border-radius: 0 15px 15px 0;
-            background: #654321;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .flip::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 11;
-            width: 100%;
-            height: 100%;
-            border-radius: 0 15px 15px 0;
-            background: #654321;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .page-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 100%;
-        }
-
-        .page-image {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            border: 3px solid #DDD;
-            background: linear-gradient(135deg, #fff, #f8f8f8);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #8B4513;
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            text-align: center;
-            line-height: 1.2;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .page-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-
-        .page-image .emoji-placeholder {
-            font-size: 24px;
-            color: #8B4513;
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
-                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-            border-radius: 12px;
-        }
-
-        .page-text {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #2c2c2c;
-            text-align: center;
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            max-width: 220px;
-        }
-
-        .page-number {
-            position: absolute;
-            bottom: 15px;
-            right: 20px;
-            font-size: 12px;
-            color: #999;
-            font-family: 'Crimson Text', serif;
-            font-style: italic;
-        }
-
-        .book-section > button {
-            border: 3px solid #ef9f00;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #ef9f00;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 15px;
-            transition: 0.3s ease-in-out;
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            font-size: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .book-section > button:focus, .book-section > button:active {
-            outline: none;
-        }
-
-        .book-section > button:hover {
-            background-color: #ef9f00;
-            color: #fff;
-            transform: scale(1.05);
-        }
-
-        .controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .auto-play {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 3px solid #4CAF50;
-            color: #4CAF50;
-        }
-
-        .auto-play:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .auto-play.active {
-            background-color: #f44336;
-            border-color: #f44336;
-            color: white;
-        }
-
-        .front#cover, .back#back-cover {
-            background: linear-gradient(135deg, #654321, #8B4513, #A0522D);
-            font-family: 'Caveat', cursive;
-            text-align: center;
-            padding: 40px 30px;
-            color: #FFFEF7;
-        }
-
-        .front#cover h1 {
-            color: #FFFEF7;
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-        }
-
-        .front#cover p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .back#back-cover {
-            background: linear-gradient(135deg, #A0522D, #8B4513, #654321);
-        }
-
-        .back#back-cover h2 {
-            color: #FFFEF7;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .instruction {
-            color: #FFFEF7;
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            font-size: 18px;
-            margin-top: 20px;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .book-section > .container {
-                width: 90vw;
-                height: 60vh;
-                max-width: 500px;
-            }
-            
-            .page-image {
-                width: 120px;
-                height: 120px;
-                font-size: 16px;
-            }
-            
-            .page-text {
-                font-size: 14px;
-                max-width: 180px;
-            }
-            
-            .book-title {
-                font-size: 28px;
-            }
-            
-            .book-section > button {
-                padding: 10px 20px;
-                font-size: 14px;
-                margin: 10px;
-            }
-        }
-        .link-gift a{
-            text-decoration: none;
-            color: #E8E6E0;
-            
-        }
-
-        .link-gift{
-            background-color: #A0522D;
-            width: 100%;
-            height: 15%;
-            margin: 0%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles/index.css">
+    
 </head>
 <body>
     <div class="book-section">
-        <div class="book-title">📖 Mi Historia con Flork</div>
+        <div class="book-title">📖 Historia </div>
         
-        <div class="container">
-            <!-- Contraportada - Ahora al final -->
+        <div class="container" id="bookContainer">
             <div class="right">
-                <figure class="back" id="back-cover">
+                <figure class="back">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/rosa.jpg" alt="Rosa" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>🌹<br>Rosa</div>'">
+                        </div>
+                        <p class="page-text">Y ojalá al menos logre sacarte una sonrisa 😊</p>
+                        <div class="page-number">6</div>
+                    </div>
+                </figure>
+                <figure class="front back-cover">
                     <div class="page-content">
                         <h2>¡Gracias por leer! 🎉</h2>
-                        <p style="font-size: 16px; margin-top: 15px;">
-                            Espero haberte sacado una sonrisa con esta pequeña historia de Flork.
+                        <p style="font-size: clamp(12px, 3vw, 16px); margin-top: 15px;">
+                            Espero haberte sacado una sonrisa 
                         </p>
-                    </div>
-                </figure>
-                <figure class="front">
-                    <div class="page-content">
-                        <div class="page-image">
-                            <img src="/imagenes/rosa.jpg" alt="">
-                        </div>
-                        <p class="page-text">Y ojalá al menos logre sacarte una sonrisa 😊</p>
+                        <img src="/icons8-down.gif" alt="">
                         <div class="link-gift">
                             <a href="regalo.html">
-                                <p>Haz clic aquí para obtener el regalo</p>
+                                Haz clic aquí para obtener el regalo
                             </a>
-                        </div>
-                        <div class="page-number">5</div>
                     </div>
                 </figure>
             </div>
     
-            <!-- Página 5 -->
             <div class="right">
                 <figure class="back">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/rosa.jpg" alt="">
+                            <img src="/imagenes/idea.jpg" alt="Idea" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>💡<br>Idea</div>'">
+                        </div>
+                        <p class="page-text">Y dije: le voy a hacer una web interactiva para alegrarle el día.</p>
+                        <div class="page-number">5</div>
+                    </div>
+                </figure>
+                <figure class="front">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/rosa.jpg" alt="Rosa" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>🌹<br>Rosa</div>'">
                         </div>
                         <p class="page-text">Y ojalá al menos logre sacarte una sonrisa 😊</p>
+                        
+                        <div class="page-number">6</div>
+                    </div>
+                </figure>
+            </div>
+    
+            <div class="right">
+                <figure class="back">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/triste.jpg" alt="Triste" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😢<br>Triste</div>'">
+                        </div>
+                        <p class="page-text">Y bueno, cuando medio leí que decía "morir", me quedé... ¡me dejaste traumado! Jajaja.</p>
+                        <div class="page-number">4</div>
+                    </div>
+                </figure>
+                <figure class="front">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/idea.jpg" alt="Idea" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>💡<br>Idea</div>'">
+                        </div>
+                        <p class="page-text">Y dije: le voy a hacer una web interactiva para alegrarle el día.</p>
                         <div class="page-number">5</div>
                     </div>
                 </figure>
-                <figure class="front">
-                    <div class="page-content">
-                        <div class="page-image">
-                            <img src="/imagenes/idea.jpg" alt="">
-                        </div>
-                        <p class="page-text">Y dije: le voy a hacer una web interactiva para alegrarSSte el día.</p>
-                        <div class="page-number">4</div>
-                    </div>
-                </figure>
             </div>
     
-            <!-- Página 4 -->
             <div class="right">
                 <figure class="back">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/idea.jpg" alt="">
+                            <img src="/imagenes/adorable.jpg" alt="Adorable" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>🥰<br>Adorable</div>'">
                         </div>
-                        <p class="page-text">Y dije: tengo una idea, le voy a hacer una web interactiva para alegrarle el día.</p>
-                        <div class="page-number">4</div>
-                    </div>
-                </figure>
-                <figure class="front">
-                    <div class="page-content">
-                        <div class="page-image">
-                            <img src="/imagenes/triste.jpg" alt="">
-                        </div>
-                        <p class="page-text">Y bueno, cuando medio leí que decía "morir", me quedé... ¡me dejaste traumado! Jajaja.</p>
-                        <div class="page-number">3</div>
-                    </div>
-                </figure>
-            </div>
-    
-            <!-- Página 3 -->
-            <div class="right">
-                <figure class="back">
-                    <div class="page-content">
-                        <div class="page-image">
-                            <img src="/imagenes/triste.jpg" alt="">
-                        </div>
-                        <p class="page-text">Y bueno, cuando medio leí que decía "morir", me quedé... ¡me dejaste traumado! Jajaja.</p>
+                        <p class="page-text">cuando vi que me habías enviado un mensaje.</p>
                         <div class="page-number">3</div>
                     </div>
                 </figure>
                 <figure class="front">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/adorable.jpg" alt="">
+                            <img src="/imagenes/triste.jpg" alt="Triste" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😢<br>Triste</div>'">
                         </div>
-                        <p class="page-text">cuando vi que me habías enviado un mensaje.</p>
-                        <div class="page-number">2</div>
+                        <p class="page-text">Y bueno, cuando medio leí que decía "morir", me quedé... ¡me dejaste traumado! Jajaja.</p>
+                        <div class="page-number">4</div>
                     </div>
                 </figure>
             </div>
     
-            <!-- Página 2 -->
             <div class="right">
                 <figure class="back">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/adorable.jpg" alt="">
+                            <img src="/imagenes/Funny Stick Figures.jpg" alt="Flork" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😄<br>Flork</div>'">
                         </div>
-                        <p class="page-text">cuando vi que me habías enviado un mensaje.</p>
+                        <p class="page-text">Y bueno te cuento lo que pasó, yo estaba en el baño.</p>
                         <div class="page-number">2</div>
                     </div>
                 </figure>
                 <figure class="front">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/Funny Stick Figures.jpg" alt="">
+                            <img src="/imagenes/adorable.jpg" alt="Adorable" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>🥰<br>Adorable</div>'">
                         </div>
-                        <p class="page-text">Y bueno te cuento lo que pasó, yo estaba en el baño.</p>
-                        <div class="page-number">1</div>
+                        <p class="page-text">cuando vi que me habías enviado un mensaje.</p>
+                        <div class="page-number">3</div>
                     </div>
                 </figure>
             </div>
     
-            <!-- Página 1 - Portada -->
             <div class="right">
                 <figure class="back">
                     <div class="page-content">
                         <div class="page-image">
-                            <img src="/imagenes/Funny Stick Figures.jpg" alt="">
+                            <img src="/imagenes/Funny Stick Figures.jpg" alt="Flork" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😄<br>Flork</div>'">
                         </div>
-                        <p class="page-text">Y bueno te cuento lo que pasó, yo estaba en el baño.</p>
+                        <p class="page-text">Aquí comienza nuestra pequeña aventura con Flork.</p>
                         <div class="page-number">1</div>
                     </div>
                 </figure>
-                <figure class="front" id="cover">
-                    <h1>📖 Mi Historia con Flork</h1>
-                    <p style="margin-top: 30px; font-size: 14px;">✨ Una historia especial para alegrar tu día ✨</p>
+                <figure class="front">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/Funny Stick Figures.jpg" alt="Flork" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😄<br>Flork</div>'">
+                        </div>
+                        <p class="page-text">Y bueno te cuento lo que pasó, yo estaba en el baño.</p>
+                        <div class="page-number">2</div>
+                    </div>
+                </figure>
+            </div>
+    
+            <div class="right">
+                <figure class="back">
+                    <div class="page-content">
+                        <div class="page-image">
+                            <img src="/imagenes/Funny Stick Figures.jpg" alt="Flork" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'>😄<br>Flork</div>'">
+                        </div>
+                        <p class="page-text">¡Prepárate para una historia divertida!</p>
+                        <div class="page-number">0</div>
+                    </div>
+                </figure>
+                <figure class="front cover">
+                    <h1>📖 Historia </h1>
+                    <p style="margin-top: 30px; font-size: clamp(12px, 3vw, 14px);">✨ Una historia especial para alegrar tu día ✨</p>
+                    <p>Esto me costó hacerlo 3 días 😲. Ojalá te saque una sonrisa.</p>
                 </figure>
             </div>
         </div>
-        
-        <div class="controls">
-            <button onclick="turnLeft()">⬅️ Anterior</button>
-            <button onclick="autoPlay()" class="auto-play" id="autoBtn">▶️ Auto</button>
-            <button onclick="turnRight()">Siguiente ➡️</button>
-        </div>
-        
         <div class="instruction">
-            Usa los botones para navegar por la historia o activa el modo automático.
+            <p>Desliza hacia la izquierda para pasar páginas o hacia la derecha para retroceder</p>
+            <p class="arrow-instruction">
+                O presiona las flechas de la PC.
+                <img src="/icons8-arrow-keys-64.png" alt="Teclas de flecha">
+            </p>
         </div>
+        
+
+            
+            
+    
     </div>
     
-    <script>
-        var right = document.getElementsByClassName("right");
-        var si = right.length;
-        var z = 1;
-        var autoInterval;
-        var isAutoPlaying = false;
-
-        // Inicializar el libro
-        turnRight();
-
-        function turnRight() {
-            if (si >= 1) {
-                si--;
-            } else {
-                si = right.length - 1;
-                function sttmot(i) {
-                    setTimeout(function() {
-                        right[i].style.zIndex = "auto";
-                    }, 300);
-                }
-                for (var i = 0; i < right.length; i++) {
-                    right[i].className = "right";
-                    sttmot(i);
-                    z = 1;
-                }
-            }
-            right[si].classList.add("flip");
-            z++;
-            right[si].style.zIndex = z;
-        }
-
-        function turnLeft() {
-            if (si < right.length) {
-                si++;
-            } else {
-                si = 1;
-                for (var i = right.length - 1; i > 0; i--) {
-                    right[i].classList.add("flip");
-                    right[i].style.zIndex = right.length + 1 - i;
-                }
-            }
-            right[si - 1].className = "right";
-            setTimeout(function() {
-                right[si - 1].style.zIndex = "auto";
-            }, 350);
-        }
-
-        function autoPlay() {
-            const autoBtn = document.getElementById('autoBtn');
-            
-            if (!isAutoPlaying) {
-                // Iniciar auto-play
-                isAutoPlaying = true;
-                autoBtn.textContent = '⏹️ Parar';
-                autoBtn.classList.add('active');
-                
-                autoInterval = setInterval(function() {
-                    turnRight();
-                }, 2500); // Cambiar página cada 2.5 segundos
-                
-            } else {
-                // Detener auto-play
-                isAutoPlaying = false;
-                autoBtn.textContent = '▶️ Auto';
-                autoBtn.classList.remove('active');
-                clearInterval(autoInterval);
-            }
-        }
-
-        // Soporte para teclado
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'ArrowRight' || e.code === 'Space') {
-                e.preventDefault();
-                turnRight();
-            } else if (e.code === 'ArrowLeft') {
-                e.preventDefault();
-                turnLeft();
-            } else if (e.code === 'Enter') {
-                e.preventDefault();
-                autoPlay();
-            }
-        });
-
-        // Detener auto-play al interactuar manualmente
-        function turnRightManual() {
-            if (isAutoPlaying) {
-                autoPlay(); // Detener auto-play
-            }
-            turnRight();
-        }
-
-        function turnLeftManual() {
-            if (isAutoPlaying) {
-                autoPlay(); // Detener auto-play
-            }
-            turnLeft();
-        }
-
-        // Actualizar los botones para detener auto-play
-        document.querySelector('button[onclick="turnRight()"]').onclick = turnRightManual;
-        document.querySelector('button[onclick="turnLeft()"]').onclick = turnLeftManual;
+    <script src="script/index.js">
+       
     </script>
 </body>
 </html>

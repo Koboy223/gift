@@ -1,0 +1,380 @@
+
+        
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #8B4513;
+    font-family: 'Crimson Text', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    touch-action: manipulation;
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    will-change: background-position;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.book-section {
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.book-title {
+    font-size: clamp(24px, 5vw, 36px);
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    color: #FFFEF7;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.container {
+    width: min(90vw, 600px);
+    height: min(70vh, 500px);
+    position: relative;
+    border-radius: 2%;
+    perspective: 1200px;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
+    touch-action: pan-y;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(135deg, #3E2723 0%, #5D4037 20%, #6D4C41 40%, #8D6E63 60%, #5D4037 80%, #3E2723 100%);
+    border-radius: 20px;
+    z-index: -2;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.container::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, #4E342E 0%, #6D4C41 50%, #4E342E 100%);
+    border-radius: 15px;
+    z-index: -1;
+    border: 2px solid #795548;
+}
+
+.right {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    transition: transform 0.7s ease-in-out;
+    transform-style: preserve-3d;
+    right: 0;
+    transform-origin: left;
+    border-radius: 10px 0 0 10px;
+    will-change: transform;
+}
+
+.right > figure {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    backface-visibility: hidden;
+    background-color: #FFFEF7;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(15px, 4vw, 30px);
+    text-align: center;
+    border: 2px solid #E8E6E0;
+}
+
+.right > .front {
+    background-position: right;
+    border-radius: 0 15px 15px 0;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.3);
+}
+
+.right > .back {
+    background-position: left;
+    border-radius: 15px 0 0 15px;
+    box-shadow: -3px 3px 20px rgba(0, 0, 0, 0.3);
+    transform: rotateY(180deg);
+}
+
+.flip {
+    transform: rotateY(-180deg);
+}
+
+.flip-back {
+    transform: rotateY(0deg);
+}
+
+.flip .front,
+.flip-back .back {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.flip::before,
+.flip-back::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 15px 15px 0;
+    background: #FFFEF7;
+    border: 2px solid #E8E6E0;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.page-image {
+    width: clamp(100px, 25vw, 150px);
+    height: clamp(100px, 25vw, 150px);
+    margin-bottom: clamp(10px, 3vw, 20px);
+    border-radius: 15px;
+    border: 3px solid #DDD;
+    background: linear-gradient(135deg, #fff, #f8f8f8);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(14px, 4vw, 20px);
+    color: #8B4513;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(10px, 3vw, 12px);
+    color: #999;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.page-text {
+    font-size: clamp(12px, 3.5vw, 16px);
+    line-height: 1.5;
+    color: #2c2c2c;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    word-wrap: break-word;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    color: #999;
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+}
+
+.cover, .back-cover {
+    background: #FFFEF7;
+    font-family: 'Caveat', cursive;
+    text-align: center;
+    padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 30px);
+    color: #2c2c2c;
+}
+
+.cover h1 {
+    color: #2c2c2c;
+    font-size: clamp(20px, 5vw, 28px);
+    margin-bottom: clamp(10px, 3vw, 20px);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cover p {
+    color: #555;
+    font-size: clamp(12px, 3vw, 16px);
+    font-weight: 600;
+}
+
+.back-cover {
+    background: #FFFEF7;
+}
+
+.back-cover h2 {
+    color: #2c2c2c;
+    font-size: clamp(18px, 4vw, 24px);
+    margin-bottom: clamp(10px, 3vw, 20px);
+}
+
+.link-gift {
+    background-color: #A0522D;
+    width: 90%;
+    padding: clamp(8px, 2vw, 12px);
+    margin-top: clamp(10px, 3vw, 15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.link-gift:hover, .link-gift:active {
+    background-color: #8B4513;
+    transform: scale(1.02);
+}
+
+.link-gift a {
+    text-decoration: none;
+    color: #E8E6E0;
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 600;
+    text-align: center;
+    display: block;
+    width: 100%;
+    padding: 5px;
+}
+
+.instruction {
+    color: #FFFEF7;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: clamp(14px, 3.5vw, 18px);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    max-width: 90%;
+    line-height: 1.4;
+}
+
+/* Estilo solo para el párrafo con la imagen */
+.arrow-instruction {
+    font-size: small;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Espacio entre texto e imagen */
+    margin: 0px;
+}
+
+.arrow-instruction img {
+    width: 8%;
+    max-width: 40px; /* Tamaño máximo para no crecer mucho en pantallas grandes */
+    height: auto;
+}
+
+@media (max-width: 480px) {
+    .book-section {
+        padding: 15px 10px;
+        gap: 15px;
+    }
+    
+    .container {
+        height: 60vh;
+        min-height: 400px;
+    }
+    
+    .page-text {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 320px) {
+    .container {
+        height: 55vh;
+        min-height: 350px;
+    }
+    
+    .page-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .page-text {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 700px;
+        height: 375px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .book-section {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .container {
+        height: 70vh;
+        max-height: 400px;
+    }
+    
+    .book-title {
+        font-size: 20px;
+    }
+    
+    .instruction {
+        font-size: 14px;
+    }
+}

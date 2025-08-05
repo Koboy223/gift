@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Surprise Gift 🎁</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="preload" href="/hWbOy2dg8b_1.gif" as="image">
+    <link rel="stylesheet" href="styles/regalo.css">
+</head>
+<body>
+    <div class="fullscreen-touch no-highlight" id="fullscreenTouch"></div>
+    
+    <div class="menu-container no-highlight" id="menuContainer">
+        <button class="menu-btn no-highlight" id="menuBtn" aria-label="Open options menu" role="button" tabindex="0">☰</button>
+        <ul class="menu-options no-highlight" id="menuOptions">
+            <li role="button" tabindex="0" aria-label="Return to home" data-action="home">Return to home</li>
+            <li role="button" tabindex="0" aria-label="Return to previous page" data-action="back">Previous page</li>
+        </ul>
+    </div>
+
+    <div class="gift-container"> 
+        <div class="gift-box no-highlight" id="giftBox" role="button" aria-label="Open gift">
+            <img src="/hWbOy2dg8b (1).gif" alt="Gift" class="gift-image no-highlight" id="giftImage" draggable="false" onerror="this.src='/path/to/fallback_image.png'">
+            <div class="tap-counter no-highlight" id="tapCounter">1</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="gift-text" id="giftText">
+            Tap or click <span id="remainingTaps">15</span> times to open the gift.🎁
+        </div>
+    </div>
+    
+    <div class="carousel-container no-highlight" id="carouselContainer">
+        <div class="carousel">
+            <button class="close-btn no-highlight" id="closeBtn" aria-label="Close carousel" role="button" tabindex="0">✕</button>
+            <div class="carousel-images" id="carouselImages">
+                <div class="carousel-image">
+                    <img src="/images/img1.png" alt="Carousel image 1">
+                </div>
+                <div class="carousel-image">
+                    <img src="/images/img2.png" alt="Carousel image 2">
+                </div>
+                <div class="carousel-image">
+                    <img src="/images/img3.png" alt="Carousel image 3">
+                </div>
+                <div class="carousel-image">
+                    <img src="/images/img4.png" alt="Carousel image 4">
+                </div>
+                <div class="carousel-image">
+                    <img src="/i.jpg" alt="Carousel image 5">
+                    <p>
+                    
+                        </p>
+                </div>
+            </div>
+            <button class="carousel-arrow prev no-highlight" id="prevBtn" aria-label="Previous image" role="button" tabindex="0">‹</button>
+            <button class="carousel-arrow next no-highlight" id="nextBtn" aria-label="Next image" role="button" tabindex="0">›</button>
+            <div class="carousel-nav" id="carouselNav">
+                <div class="nav-dot no-highlight active" data-slide="0" role="button" aria-label="Go to image 1" tabindex="0"></div>
+                <div class="nav-dot no-highlight" data-slide="1" role="button" aria-label="Go to image 2" tabindex="0"></div>
+                <div class="nav-dot no-highlight" data-slide="2" role="button" aria-label="Go to image 3" tabindex="0"></div>
+                <div class="nav-dot no-highlight" data-slide="3" role="button" aria-label="Go to image 4" tabindex="0"></div>
+                <div class="nav-dot no-highlight" data-slide="4" role="button" aria-label="Go to image 5s" tabindex="0"></div>
+        </div>
+            </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script src="script/regalo.js"></script>
+</body>
+</html>
