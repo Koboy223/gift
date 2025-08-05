@@ -1,3 +1,5 @@
+
+        
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -9,7 +11,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #8B4513;
-   font-family: 'Bricolage Grotesque', cursive;
+    font-family: 'Crimson Text', serif;
     overflow-x: hidden;
     min-height: 100vh;
     touch-action: manipulation;
@@ -35,8 +37,8 @@ body {
 }
 
 .book-title {
-    font-family: cursive;
     font-size: clamp(24px, 5vw, 36px);
+    font-family: 'Caveat', cursive;
     font-weight: 700;
     color: #FFFEF7;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
@@ -174,9 +176,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: cursive;
     font-size: clamp(14px, 4vw, 20px);
     color: #8B4513;
+    font-family: 'Caveat', cursive;
     font-weight: 600;
     text-align: center;
     line-height: 1.2;
@@ -210,11 +212,12 @@ body {
 }
 
 .page-text {
-    font-family: cursive;
-    font-size: clamp(12px, 3.5vw, 100px);
+    font-size: clamp(12px, 3.5vw, 16px);
     line-height: 1.5;
     color: #2c2c2c;
     text-align: center;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     max-width: 90%;
     word-wrap: break-word;
@@ -224,22 +227,21 @@ body {
     position: absolute;
     bottom: 10px;
     right: 15px;
-    font-family: cursive;
     font-size: clamp(10px, 2.5vw, 12px);
     color: #999;
+    font-family: 'Crimson Text', serif;
     font-style: italic;
 }
 
 .cover, .back-cover {
     background: #FFFEF7;
-    font-family: cursive;
+    font-family: 'Caveat', cursive;
     text-align: center;
     padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 30px);
     color: #2c2c2c;
 }
 
 .cover h1 {
-    font-family: cursive;
     color: #2c2c2c;
     font-size: clamp(20px, 5vw, 28px);
     margin-bottom: clamp(10px, 3vw, 20px);
@@ -247,7 +249,6 @@ body {
 }
 
 .cover p {
-    font-family: cursive;
     color: #555;
     font-size: clamp(12px, 3vw, 16px);
     font-weight: 600;
@@ -258,7 +259,6 @@ body {
 }
 
 .back-cover h2 {
-    font-family: cursive;
     color: #2c2c2c;
     font-size: clamp(18px, 4vw, 24px);
     margin-bottom: clamp(10px, 3vw, 20px);
@@ -286,7 +286,6 @@ body {
 .link-gift a {
     text-decoration: none;
     color: #E8E6E0;
-    font-family: cursive;
     font-size: clamp(11px, 2.8vw, 14px);
     font-weight: 600;
     text-align: center;
@@ -296,8 +295,8 @@ body {
 }
 
 .instruction {
-    font-family: cursive;
     color: #FFFEF7;
+    font-family: 'Caveat', cursive;
     font-weight: 600;
     font-size: clamp(14px, 3.5vw, 18px);
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
@@ -306,19 +305,19 @@ body {
     line-height: 1.4;
 }
 
+/* Estilo solo para el párrafo con la imagen */
 .arrow-instruction {
-    font-family: cursive;
     font-size: small;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Espacio entre texto e imagen */
     margin: 0px;
 }
 
 .arrow-instruction img {
     width: 8%;
-    max-width: 40px;
+    max-width: 40px; /* Tamaño máximo para no crecer mucho en pantallas grandes */
     height: auto;
 }
 
@@ -381,5 +380,3 @@ body {
         font-size: 14px;
     }
 }
-
-
