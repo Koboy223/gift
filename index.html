@@ -484,10 +484,19 @@
         window.addEventListener('orientationchange', handleViewportChange);
         handleViewportChange();
 
-    </script>
 
+    </script>
+ <script>
+  window.onload = () => {
+    const token = sessionStorage.getItem('access-granted');
+    if (token !== '59d16f33a40be4ff2c12fdfc46242a2c6a362f418b0cc6f7a7f6b448bfc1f8ee') {
+      window.location.href = '/login.html';
+    }
+  };
+</script>
     
 </body>
 </html>
+
 
 
