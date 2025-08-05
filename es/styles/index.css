@@ -1,14 +1,15 @@
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    font-family: 'Pacifico', cursive;
+    font-family: 'Bricolage Grotesque', cursive;
+
 }
 
 body {
     margin: 0;
     padding: 0;
     background-color: #8B4513;
-    font-family: 'Pacifico', cursive;
+   font-family: 'Bricolage Grotesque', cursive;
     overflow-x: hidden;
     min-height: 100vh;
     touch-action: manipulation;
@@ -380,4 +381,5 @@ body {
         font-size: 14px;
     }
 }
+
 
