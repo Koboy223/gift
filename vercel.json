@@ -1,9 +1,15 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/es(/.*)?",
+      "destination": "/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/en(/.*)?",
+      "destination": "/index.html",
+      "permanent": false
     }
   ]
 }
