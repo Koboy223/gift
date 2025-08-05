@@ -1,70 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Login - Acceso Restringido</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #1e293b;
-    color: white;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100vh; margin: 0;
-  }
-  input, button {
-    font-size: 1rem;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border-radius: 6px;
-    border: none;
-  }
-  button {
-    cursor: pointer;
-    background-color: #10b981;
-    color: white;
-  }
-  .error {
-    color: #f87171;
-    display: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Login - Acceso Restringido</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    input, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      cursor: pointer;
+      background-color: #10b981;
+      color: white;
+    }
+    .error {
+      color: #f87171;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<h1>Ingrese la contraseña</h1>
-<input type="password" id="password" placeholder="Contraseña" />
-<button onclick="checkPassword()">Entrar</button>
-<div class="error" id="error">Contraseña incorrecta</div>
+  <h1>Ingrese la contraseña</h1>
+  <input type="password" id="password" placeholder="Contraseña" />
+  <button id="btn">Entrar</button>
+  <div class="error" id="error">Contraseña incorrecta</div>
 
-<script>
-  // Hash simple SHA-256 (browser API)
-  async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  async function checkPassword() {
-    const pass = document.getElementById('password').value;
-    const hash = await sha256(pass);
-    // Aquí ponga el hash de la contraseña correcta 'say'
-    const correctHash = '59d16f33a40be4ff2c12fdfc46242a2c6a362f418b0cc6f7a7f6b448bfc1f8ee';
-
-    if (hash === correctHash) {
-      sessionStorage.setItem('access-granted', hash);
-      window.location.href = '/';
-    } else {
-      document.getElementById('error').style.display = 'block';
+  <script>
+    async function sha256(str) {
+      const buf = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buf);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-  }
 
-  // Verificar acceso ya concedido
-  window.onload = async () => {
-    const token = sessionStorage.getItem('access-granted');
-    if (token === '59d16f33a40be4ff2c12fdfc46242a2c6a362f418b0cc6f7a7f6b448bfc1f8ee') {
-      window.location.href = '/';
-    }
-  };
-</script>
+    const correctHash = 'a0b967fc60136d2ef96fa2a4feaf41ea3e0f266e510b4a5e188b6f781ae12a30';
+
+    document.getElementById('btn').addEventListener('click', async () => {
+      const pass = document.getElementById('password').value.trim();
+      const errorDiv = document.getElementById('error');
+      errorDiv.style.display = 'none';
+
+      if (!pass) {
+        errorDiv.textContent = 'Por favor ingrese una contraseña';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const passHash = await sha256(pass);
+
+      if (passHash === correctHash) {
+        alert('¡Acceso concedido!');
+        // Aquí puede redirigir a la página protegida
+        // window.location.href = '/';
+      } else {
+        errorDiv.textContent = 'Contraseña incorrecta';
+        errorDiv.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
