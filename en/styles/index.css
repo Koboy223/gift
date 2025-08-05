@@ -36,7 +36,7 @@ body {
 
 .book-title {
     font-size: clamp(24px, 5vw, 36px);
-    font-family: 'Caveat', cursive;
+    font-family:  cursive;
     font-weight: 700;
     color: #FFFEF7;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
@@ -379,3 +379,4 @@ body {
     }
 
 }
+
