@@ -356,22 +356,22 @@
         </div>
 
         <div class="languages">
-            <div class="lang-option" data-lang="es" onclick="selectLanguage('es')">
+            <div class="lang-option" data-lang="es" onclick="selectLanguage('es')" role="button" aria-label="Seleccionar Español">
                 <div class="selected-check">✓</div>
-                <img src="https://flagcdn.com/es.svg" alt="Español" class="flag" loading="lazy">
+                <img src="https://flagcdn.com/es.svg" alt="Bandera de Español" class="flag" loading="lazy">
                 <div class="lang-name">Español</div>
                 <div class="lang-native">Spanish</div>
             </div>
 
-            <div class="lang-option" data-lang="en" onclick="selectLanguage('en')">
+            <div class="lang-option" data-lang="en" onclick="selectLanguage('en')" role="button" aria-label="Select English">
                 <div class="selected-check">✓</div>
-                <img src="https://flagcdn.com/gb.svg" alt="English" class="flag" loading="lazy">
+                <img src="https://flagcdn.com/gb.svg" alt="Bandera de Inglés" class="flag" loading="lazy">
                 <div class="lang-name">English</div>
                 <div class="lang-native">English</div>
             </div>
         </div>
 
-        <button class="continue-btn" id="continueBtn" onclick="proceedToSite()">
+        <button class="continue-btn" id="continueBtn" onclick="proceedToSite()" disabled aria-label="Continuar">
             Continuar / Continue
         </button>
 
@@ -392,17 +392,19 @@
             // Remove previous selection
             document.querySelectorAll('.lang-option').forEach(option => {
                 option.classList.remove('selected');
+                option.setAttribute('aria-selected', 'false');
             });
 
             // Add selection to clicked option
             const selectedOption = document.querySelector(`[data-lang="${lang}"]`);
             selectedOption.classList.add('selected');
-            
+            selectedOption.setAttribute('aria-selected', 'true');
             selectedLang = lang;
 
-            // Show continue button
+            // Enable and show continue button
             const continueBtn = document.getElementById('continueBtn');
             continueBtn.classList.add('visible');
+            continueBtn.removeAttribute('disabled');
         }
 
         function proceedToSite() {
@@ -416,9 +418,15 @@
             const loadingText = document.querySelector('.loading-text');
             loadingText.textContent = selectedLang === 'es' ? 'Cargando...' : 'Loading...';
 
-            // Simulate loading and redirect
+            // Redirect to the selected language page
             setTimeout(() => {
-                window.location.href = `/${selectedLang}/index.html`;
+                try {
+                    window.location.href = `/${selectedLang}/index.html`;
+                } catch (error) {
+                    console.error('Error redirecting:', error);
+                    loading.classList.remove('active');
+                    alert(selectedLang === 'es' ? 'Error al redirigir. Por favor, intenta de nuevo.' : 'Error redirecting. Please try again.');
+                }
             }, 1500);
         }
 
@@ -435,7 +443,6 @@
 
         // Touch improvements for mobile
         document.querySelectorAll('.lang-option').forEach(option => {
-            // Add touch feedback
             option.addEventListener('touchstart', function() {
                 this.style.transform = 'scale(0.98)';
             });
@@ -459,7 +466,7 @@
 
         // Prevent zoom on double tap (iOS)
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
+        document.addEventListener('touchend', function(event) {
             const now = (new Date()).getTime();
             if (now - lastTouchEnd <= 300) {
                 event.preventDefault();
