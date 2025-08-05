@@ -9,7 +9,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #8B4513;
-    font-family: 'Crimson Text', serif;
+    font-family: serif;
     overflow-x: hidden;
     min-height: 100vh;
     touch-action: manipulation;
@@ -377,4 +377,5 @@ body {
     .instruction {
         font-size: 14px;
     }
+
 }
