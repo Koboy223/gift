@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecciona tu idioma</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            color: #f8fafc;
+        }
+
+        .language-selector {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(148, 163, 184, 0.1);
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: clamp(1.5rem, 4vw, 1.75rem);
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: clamp(0.875rem, 3vw, 1rem);
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .languages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .lang-option {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 140px;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-option:hover {
+            border-color: #60a5fa;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(96, 165, 250, 0.2);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .lang-option:active {
+            transform: translateY(-1px);
+        }
+
+        .lang-option.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+        }
+
+        .flag {
+            width: 64px;
+            height: 43px;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+        }
+
+        .lang-name {
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            font-weight: 500;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+        }
+
+        .lang-native {
+            font-size: clamp(0.8rem, 2.5vw, 0.875rem);
+            color: #94a3b8;
+        }
+
+        .selected-check {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .lang-option.selected .selected-check {
+            display: flex;
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem 2rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .continue-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(148, 163, 184, 0.3);
+            border-top: 3px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #f8fafc;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            font-weight: 500;
+        }
+
+        .keyboard-hint {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+            color: #64748b;
+        }
+
+        .key {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 4px;
+            padding: 0.125rem 0.375rem;
+            font-family: monospace;
+            margin: 0 0.125rem;
+            color: #f8fafc;
+        }
+
+        /* Tablet styles */
+        @media (max-width: 768px) {
+            .language-selector {
+                max-width: 90vw;
+                padding: 2rem 1.5rem;
+            }
+
+            .languages {
+                gap: 1.25rem;
+            }
+
+            .lang-option {
+                padding: 1.25rem 0.75rem;
+            }
+
+            .flag {
+                width: 56px;
+                height: 37px;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .language-selector {
+                padding: 1.5rem 1rem;
+                border-radius: 20px;
+                max-width: 95vw;
+            }
+
+            .languages {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .lang-option {
+                padding: 1rem 0.75rem;
+                min-width: auto;
+            }
+
+            .flag {
+                width: 48px;
+                height: 32px;
+            }
+
+            .keyboard-hint {
+                margin-top: 1rem;
+                padding-top: 1rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 320px) {
+            .language-selector {
+                padding: 1rem 0.75rem;
+            }
+
+            .header {
+                margin-bottom: 1.5rem;
+            }
+
+            .languages {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Landscape mobile orientation */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .language-selector {
+                padding: 1rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .header {
+                margin-bottom: 1rem;
+            }
+
+            .languages {
+                margin-bottom: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .keyboard-hint {
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+            }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .language-selector {
+                border: 2px solid #f8fafc;
+            }
+
+            .lang-option {
+                border-width: 2px;
+            }
+
+            .lang-option:hover {
+                border-color: #ffffff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <div class="header">
+            <h1 class="title">Selecciona tu idioma</h1>
+            <p class="subtitle">Choose your language</p>
+        </div>
+
+        <div class="languages">
+            <div class="lang-option" data-lang="es" onclick="selectLanguage('es')" role="button" aria-label="Seleccionar Español">
+                <div class="selected-check">✓</div>
+                <img src="https://flagcdn.com/es.svg" alt="Bandera de Español" class="flag" loading="lazy">
+                <div class="lang-name">Español</div>
+                <div class="lang-native">Spanish</div>
+            </div>
+
+            <div class="lang-option" data-lang="en" onclick="selectLanguage('en')" role="button" aria-label="Select English">
+                <div class="selected-check">✓</div>
+                <img src="https://flagcdn.com/gb.svg" alt="Bandera de Inglés" class="flag" loading="lazy">
+                <div class="lang-name">English</div>
+                <div class="lang-native">English</div>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" onclick="proceedToSite()" disabled aria-label="Continuar">
+            Continuar / Continue
+        </button>
+
+        <div class="keyboard-hint">
+            Atajos de teclado: <span class="key">1</span> Español, <span class="key">2</span> English
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Cargando...</div>
+    </div>
+
+    <script>
+        let selectedLang = null;
+
+        function selectLanguage(lang) {
+            // Remove previous selection
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.classList.remove('selected');
+                option.setAttribute('aria-selected', 'false');
+            });
+
+            // Add selection to clicked option
+            const selectedOption = document.querySelector(`[data-lang="${lang}"]`);
+            selectedOption.classList.add('selected');
+            selectedOption.setAttribute('aria-selected', 'true');
+            selectedLang = lang;
+
+            // Enable and show continue button
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.classList.add('visible');
+            continueBtn.removeAttribute('disabled');
+        }
+
+        function proceedToSite() {
+            if (!selectedLang) return;
+
+            // Show loading
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+
+            // Update loading text based on selected language
+            const loadingText = document.querySelector('.loading-text');
+            loadingText.textContent = selectedLang === 'es' ? 'Cargando...' : 'Loading...';
+
+            // Redirect to the selected language page
+            setTimeout(() => {
+                try {
+                    window.location.href = `/${selectedLang}/index.html`;
+                } catch (error) {
+                    console.error('Error redirecting:', error);
+                    loading.classList.remove('active');
+                    alert(selectedLang === 'es' ? 'Error al redirigir. Por favor, intenta de nuevo.' : 'Error redirecting. Please try again.');
+                }
+            }, 1500);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') {
+                selectLanguage('es');
+            } else if (e.key === '2') {
+                selectLanguage('en');
+            } else if (e.key === 'Enter' && selectedLang) {
+                proceedToSite();
+            }
+        });
+
+        // Touch improvements for mobile
+        document.querySelectorAll('.lang-option').forEach(option => {
+            option.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+
+            option.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // Error handling for flag images
+        document.querySelectorAll('.flag').forEach(img => {
+            img.onerror = function() {
+                this.style.background = 'rgba(148, 163, 184, 0.3)';
+                this.style.display = 'flex';
+                this.style.alignItems = 'center';
+                this.style.justifyContent = 'center';
+                this.innerHTML = '🌐';
+                this.style.fontSize = '24px';
+            };
+        });
+
+        // Prevent zoom on double tap (iOS)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Improve viewport handling on mobile
+        function handleViewportChange() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        window.addEventListener('resize', handleViewportChange);
+        window.addEventListener('orientationchange', handleViewportChange);
+        handleViewportChange();
+
+
+    </script>
+ 
+    
+</body>
+</html>
+
+
+
+
